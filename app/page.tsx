@@ -1,11 +1,22 @@
-import Image from "next/image";
-import Counter from "./components/Counter";
+import Link from "next/link";
 
 export default function Home() {
   return (
-    <>
-      <h1>hello!</h1>
-      <Counter />
-    </>
+    <section className="h-dvh text-center mt-10 text-lg">
+      <h1>Welcome to Redux Demo App using Nextjs App Router</h1>
+      <div>
+        <ul className="gap-5 mt-10 flex flex-col">
+          <li>
+            <Link href="/counter">Counter</Link>
+          </li>
+          <li>
+            <Link href="#">To-Do</Link>
+          </li>
+          <li>
+            <Link href="#">To-Do</Link>
+          </li>
+        </ul>
+      </div>
+    </section>
   );
 }
