@@ -3,7 +3,7 @@ import Link from "next/link";
 export default function Home() {
   return (
     <section className="h-dvh text-center mt-10 text-lg">
-      <h1>Welcome to Redux Demo App using Nextjs App Router</h1>
+      <h1>Welcome to Demo Application built using Nextjs App Router</h1>
       <div>
         <ul className="gap-5 mt-10 flex flex-col">
           <li>
