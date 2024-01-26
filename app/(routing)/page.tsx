@@ -10,7 +10,7 @@ export default function Home() {
             <Link href="/counter">Counter</Link>
           </li>
           <li>
-            <Link href="#">To-Do</Link>
+            <Link href="/login">Login</Link>
           </li>
           <li>
             <Link href="#">To-Do</Link>
