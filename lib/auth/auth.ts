@@ -7,42 +7,42 @@ import prisma from "@lib/prisma/prisma";
 const VERCEL_DEPLOYMENT = !!process.env.VERCEL_URL;
 
 export const authOptions: NextAuthOptions = {
-  providers: [],
-  //     GitHubProvider({
-  //       clientId: process.env.AUTH_GITHUB_ID as string,
-  //       clientSecret: process.env.AUTH_GITHUB_SECRET as string,
-  //       profile(profile) {
-  //         return {
-  //           id: profile.id.toString(),
-  //           name: profile.name || profile.login,
-  //           gh_username: profile.login,
-  //           email: profile.email,
-  //           image: profile.avatar_url,
-  //         };
-  //       },
-  //     }),
-  //     // @ts-expect-error
-  //     CredentialsProvider({
-  //       id: "domain-login",
-  //       name: "Domain Account",
-  //       async authorize(credentials, req) {
-  //         const user = {
-  //           /* add function to get user */
-  //         };
-  //         return user;
-  //       },
-  //       credentials: {
-  //         domain: {
-  //           label: "Domain",
-  //           type: "text ",
-  //           placeholder: "CORPNET",
-  //           value: "CORPNET",
-  //         },
-  //         username: { label: "Username", type: "text ", placeholder: "jsmith" },
-  //         password: { label: "Password", type: "password" },
-  //       },
-  //     }),
-  //   ],
+  providers: [
+    //     GitHubProvider({
+    //       clientId: process.env.AUTH_GITHUB_ID as string,
+    //       clientSecret: process.env.AUTH_GITHUB_SECRET as string,
+    //       profile(profile) {
+    //         return {
+    //           id: profile.id.toString(),
+    //           name: profile.name || profile.login,
+    //           gh_username: profile.login,
+    //           email: profile.email,
+    //           image: profile.avatar_url,
+    //         };
+    //       },
+    //    }),
+    // @ts-expect-error
+    CredentialsProvider({
+      id: "domain-login",
+      name: "Domain Account",
+      async authorize(credentials, req) {
+        const user = {
+          /* add function to get user */
+        };
+        return user;
+      },
+      credentials: {
+        domain: {
+          label: "Domain",
+          type: "text ",
+          placeholder: "CORPNET",
+          value: "CORPNET",
+        },
+        username: { label: "email", type: "email", placeholder: "jsmith" },
+        password: { label: "Password", type: "password" },
+      },
+    }),
+  ],
   pages: {
     signIn: `/login`,
     verifyRequest: `/login`,
