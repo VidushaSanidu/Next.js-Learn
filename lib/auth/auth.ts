@@ -23,24 +23,36 @@ export const authOptions: NextAuthOptions = {
     //    }),
     // @ts-expect-error
     CredentialsProvider({
-      id: "domain-login",
-      name: "Domain Account",
+      // id: "domain-login",
+      // name: "Domain Account",
+      credentials: {
+        email: {},
+        password: {},
+      },
+
       async authorize(credentials, req) {
-        const user = {
-          /* add function to get user */
-        };
+        // if credentials are valid
+        // need to return an user
+        // it will be persisted to the JSON Web Token and the user will be signedIn
+        // otherwise need to throw an error or return null
+        const user = await prisma.user.findUnique({
+          where: {
+            email: credentials.email,
+          },
+        });
+
         return user;
       },
-      credentials: {
-        domain: {
-          label: "Domain",
-          type: "text ",
-          placeholder: "CORPNET",
-          value: "CORPNET",
-        },
-        username: { label: "email", type: "email", placeholder: "jsmith" },
-        password: { label: "Password", type: "password" },
-      },
+      // credentials: {
+      //   domain: {
+      //     label: "Domain",
+      //     type: "text ",
+      //     placeholder: "CORPNET",
+      //     value: "CORPNET",
+      //   },
+      //   username: { label: "email", type: "email", placeholder: "jsmith" },
+      //   password: { label: "Password", type: "password" },
+      // },
     }),
   ],
   pages: {

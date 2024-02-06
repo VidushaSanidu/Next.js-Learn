@@ -23,25 +23,36 @@ export default function RegisterPage() {
           handleSubmit;
         }}
       >
-        <div>
-          <h1 className="text-center m-5">Registration</h1>
-          <div className="flex justify-center flex-col mx-8">
+        <div className="">
+          <h1 className="text-center m-5 text-lg">Registration</h1>
+          <div className="flex gap-y-2 flex-col">
             <label htmlFor="email">Email</label>
             <input
-              className="my-3 text-black"
+              className="px-4 py-2 rounded text-black"
               type="email"
               name="email"
               id="email"
+              placeholder="abc@gmail.com"
             />
             <label htmlFor="password">Password</label>
             <input
-              className="my-3 text-black"
+              className="px-4 py-2 rounded text-black"
               type="password"
               name="password"
               id="password"
             />
+            <label htmlFor="c-password">Confirm Password</label>
+            <input
+              className="px-4 py-2 rounded text-black"
+              type="password"
+              name="c-password"
+              id="c-password"
+            />
           </div>
-          <button className="ml-8" type="submit">
+          <button
+            className="p-2 mt-3 bg-blue-200 rounded text-sky-800"
+            type="submit"
+          >
             Register
           </button>
         </div>
