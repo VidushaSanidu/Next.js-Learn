@@ -1,5 +1,4 @@
 import { getServerSession, type NextAuthOptions } from "next-auth";
-import GitHubProvider from "next-auth/providers/github";
 import { CredentialsProvider } from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import prisma from "@lib/prisma/prisma";
@@ -30,7 +29,7 @@ export const authOptions: NextAuthOptions = {
         password: {},
       },
 
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         // if credentials are valid
         // need to return an user
         // it will be persisted to the JSON Web Token and the user will be signedIn
