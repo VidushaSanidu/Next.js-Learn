@@ -1,92 +1,22 @@
-"use client";
+import RegisterPage from "@app/components/RegisterPage";
+import Link from "next/link";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
-import { useForm } from "react-hook-form";
-import { TRegisterSchema, registerSchema } from "@lib/zod/types";
-
-export default function RegisterPage() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-    reset,
-    setError,
-  } = useForm<TRegisterSchema>({
-    resolver: zodResolver(registerSchema),
-  });
-
-  // const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   const formData = new FormData(e.currentTarget);
-  //   const response = await fetch("api/auth/register", {
-  //     method: "POST",
-  //     body: JSON.stringify({
-  //       email: formData.get("email"),
-  //       password: formData.get("password"),
-  //     }),
-  //   });
-  //   console.log(response);
-  // };
-
-  const onSubmit = async (data: TRegisterSchema) => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    reset();
-  };
-
+export default function page() {
   return (
-    <section>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="flex justify-center">
-          <div>
-            <h1 className="text-center m-5 text-lg">Registration</h1>
-            <div className="flex gap-y-2 flex-col">
-              <label htmlFor="email">Email</label>
-              <input
-                {...register("email")}
-                className="px-4 py-2 rounded text-black"
-                type="email"
-                name="email"
-                id="email"
-                placeholder="abc@gmail.com"
-              />
-              {errors.email && (
-                <p className="text-red-500">{`${errors.email.message}`}</p>
-              )}
-              <label htmlFor="password">Password</label>
-              <input
-                {...register("password")}
-                className="px-4 py-2 rounded text-black"
-                type="password"
-                name="password"
-                id="password"
-              />
-              {errors.password && (
-                <p className="text-red-500">{`${errors.password.message}`}</p>
-              )}
-              <label htmlFor="c-password">Confirm Password</label>
-              <input
-                {...register("confirmPassword")}
-                className="px-4 py-2 rounded text-black"
-                type="password"
-                name="c-password"
-                id="c-password"
-              />
-              {errors.confirmPassword && (
-                <p className="text-red-500">{`${errors.confirmPassword.message}`}</p>
-              )}
-            </div>
-            <button
-              className="p-2 mt-3 bg-blue-200 rounded text-sky-800 disabled:bg-gray-500"
-              disabled={isSubmitting}
-              type="submit"
-            >
-              Register
-            </button>
-          </div>
-        </div>
-      </form>
-    </section>
+    <div className="h-full">
+      <h1 className="mt-6 text-center font-cal text-3xl dark:text-white">
+        Welcome! Please Register
+      </h1>
+      <RegisterPage />
+      <div className="mx-auto my-4 flex w-full items-center justify-evenly before:mr-4 before:block before:h-px before:flex-grow before:bg-stone-400 after:ml-4 after:block after:h-px after:flex-grow after:bg-stone-400">
+        or
+      </div>
+      <p className="text-center text-sm text-gray-600 mt-2">
+        If you have an account, please&nbsp;
+        <Link className="text-blue-500 hover:underline" href="/login">
+          Sign in
+        </Link>
+      </p>
+    </div>
   );
 }
