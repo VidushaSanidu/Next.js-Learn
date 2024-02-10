@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
 import { useForm } from "react-hook-form";
 import { TRegisterSchema, registerSchema } from "@lib/zod/types";
 
@@ -14,6 +13,11 @@ export default function RegisterPage() {
     setError,
   } = useForm<TRegisterSchema>({
     resolver: zodResolver(registerSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
   });
 
   // const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -30,7 +34,7 @@ export default function RegisterPage() {
   // };
 
   const onSubmit = async (data: TRegisterSchema) => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    console.log(data);
 
     reset();
   };
