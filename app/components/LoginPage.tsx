@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TLoginSchema, loginSchema } from "@lib/zod/types";
-import OneLogin from "next-auth/providers/onelogin";
+import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 
 export default function LoginPage() {
@@ -21,9 +21,10 @@ export default function LoginPage() {
   });
 
   const onSubmit = async (data: TLoginSchema) => {
-    console.log(data);
-
-    reset();
+    const signInData = await signIn("credentials", {
+      email: data.email,
+      password: data.password,
+    });
   };
 
   return (

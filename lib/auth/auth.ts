@@ -1,35 +1,33 @@
-import { getServerSession, type NextAuthOptions } from "next-auth";
-import { CredentialsProvider } from "next-auth/providers/credentials";
+import { NextAuthOptions } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import prisma from "@lib/prisma/prisma";
+import { compare } from "bcrypt";
 
 const VERCEL_DEPLOYMENT = !!process.env.VERCEL_URL;
 
 export const authOptions: NextAuthOptions = {
+  adapter: PrismaAdapter(prisma),
+  session: {
+    strategy: "jwt",
+  },
+  pages: {
+    signIn: `/login`,
+    verifyRequest: `/login`,
+    error: "/login", // Error code passed in query string as ?error=
+  },
   providers: [
-    //     GitHubProvider({
-    //       clientId: process.env.AUTH_GITHUB_ID as string,
-    //       clientSecret: process.env.AUTH_GITHUB_SECRET as string,
-    //       profile(profile) {
-    //         return {
-    //           id: profile.id.toString(),
-    //           name: profile.name || profile.login,
-    //           gh_username: profile.login,
-    //           email: profile.email,
-    //           image: profile.avatar_url,
-    //         };
-    //       },
-    //    }),
-    // @ts-expect-error
     CredentialsProvider({
-      // id: "domain-login",
-      // name: "Domain Account",
+      name: "Credentials",
       credentials: {
-        email: {},
-        password: {},
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
       },
 
       async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) {
+          return null;
+        }
         // if credentials are valid
         // need to return an user
         // it will be persisted to the JSON Web Token and the user will be signedIn
@@ -40,27 +38,26 @@ export const authOptions: NextAuthOptions = {
           },
         });
 
-        return user;
+        if (!user) {
+          return null;
+        }
+
+        const passwordMatch = await compare(
+          credentials.password,
+          user.password!
+        );
+        if (!passwordMatch) {
+          return null;
+        }
+
+        return {
+          id: user.id,
+          email: user.email,
+        };
       },
-      // credentials: {
-      //   domain: {
-      //     label: "Domain",
-      //     type: "text ",
-      //     placeholder: "CORPNET",
-      //     value: "CORPNET",
-      //   },
-      //   username: { label: "email", type: "email", placeholder: "jsmith" },
-      //   password: { label: "Password", type: "password" },
-      // },
     }),
   ],
-  pages: {
-    signIn: `/login`,
-    verifyRequest: `/login`,
-    error: "/login", // Error code passed in query string as ?error=
-  },
-  adapter: PrismaAdapter(prisma),
-  session: { strategy: "jwt" },
+
   cookies: {
     sessionToken: {
       name: `${VERCEL_DEPLOYMENT ? "__Secure-" : ""}next-auth.session-token`,
@@ -95,72 +92,3 @@ export const authOptions: NextAuthOptions = {
     },
   },
 };
-
-export function getSession() {
-  return getServerSession(authOptions) as Promise<{
-    user: {
-      id: string;
-      name: string;
-      username: string;
-      email: string;
-      image: string;
-    };
-  } | null>;
-}
-
-export function withSiteAuth(action: any) {
-  return async (
-    formData: FormData | null,
-    siteId: string,
-    key: string | null
-  ) => {
-    const session = await getSession();
-    if (!session) {
-      return {
-        error: "Not authenticated",
-      };
-    }
-    const site = await prisma.site.findUnique({
-      where: {
-        id: siteId,
-      },
-    });
-    if (!site || site.userId !== session.user.id) {
-      return {
-        error: "Not authorized",
-      };
-    }
-
-    return action(formData, site, key);
-  };
-}
-
-export function withPostAuth(action: any) {
-  return async (
-    formData: FormData | null,
-    postId: string,
-    key: string | null
-  ) => {
-    const session = await getSession();
-    if (!session?.user.id) {
-      return {
-        error: "Not authenticated",
-      };
-    }
-    const post = await prisma.post.findUnique({
-      where: {
-        id: postId,
-      },
-      include: {
-        site: true,
-      },
-    });
-    if (!post || post.userId !== session.user.id) {
-      return {
-        error: "Post not found",
-      };
-    }
-
-    return action(formData, post, key);
-  };
-}

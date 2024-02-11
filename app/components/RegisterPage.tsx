@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { TRegisterSchema, registerSchema } from "@lib/zod/types";
+import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
   const {
@@ -20,23 +21,21 @@ export default function RegisterPage() {
     },
   });
 
-  // const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   const formData = new FormData(e.currentTarget);
-  //   const response = await fetch("api/auth/register", {
-  //     method: "POST",
-  //     body: JSON.stringify({
-  //       email: formData.get("email"),
-  //       password: formData.get("password"),
-  //     }),
-  //   });
-  //   console.log(response);
-  // };
-
   const onSubmit = async (data: TRegisterSchema) => {
-    console.log(data);
+    const router = useRouter();
+    const response = await fetch("api/user", {
+      method: "POST",
+      body: JSON.stringify({
+        email: data.email,
+        password: data.password,
+      }),
+    });
 
-    reset();
+    if (response.ok) {
+      router.push("/login");
+    } else {
+      console.log("registration failed");
+    }
   };
 
   return (
